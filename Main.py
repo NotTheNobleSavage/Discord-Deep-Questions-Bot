@@ -1,23 +1,9 @@
 import discord
 import random
+import json
 
 # Create a new bot
 bot = discord.Bot()
-
-#Some Basic questions
-questions = [
-    "What is something you've always wanted to tell me but haven't?",
-    "What's the most important lesson you've learned this year?",
-    "What's something you're afraid to do but really want to?",
-    "When was the last time you felt truly seen by someone?",
-    "What do you think is your biggest strength, and how has it helped you in your life?",
-    "What's one thing you're currently struggling with that you'd like some support on?",
-    "When was the last time you took a risk, and how did it turn out?",
-    "What's something you've been meaning to do for a long time, but haven't yet?",
-    "What's one thing you're grateful for right now, and why?",
-    "What's something you've done in the past that you're proud of?"
-]
-
 anon_mode = False
 
 @bot.event
@@ -35,7 +21,9 @@ class MyModal(discord.ui.Modal):
     async def callback(self, interaction: discord.Interaction):
 
         #Allows for anon mode so that the user's name is not shown
-        embed = discord.Embed(title="Answer",description=self.children[0].value)
+        embed = discord.Embed(
+            title="We're not really strangers.",
+            description=f"Question: {question} \n Answer: {self.children[0].value}")
         if anon_mode == False:
             embed.set_footer(text=str(interaction.user), icon_url=interaction.user.avatar.url)
         else:
@@ -54,9 +42,13 @@ class MyView(discord.ui.View):
 #Slash Command
 @bot.slash_command()
 async def deep_question(ctx: discord.ApplicationContext):
+    with open('questions.json') as fp:
+            questions = json.load(fp)
+
+    global question 
+    question = questions['questions'][random.randint(0, len(questions['questions']) - 1)]
     embed = discord.Embed(
         title="We're not really strangers.",
-        description=questions[random.randint(0, len(questions) - 1)])
+        description=question)
     await ctx.respond(embed = embed, view=MyView())
-
 bot.run("Token")
