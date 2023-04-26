@@ -10,5 +10,5 @@ Based of the fun/horror card game We're Not Really Strangers.
 
 Might host myself if people are intrested
 
-#Bot Invite Link
+# Bot Invite Link
 https://discord.com/api/oauth2/authorize?client_id=1100664617593733150&permissions=0&scope=bot
